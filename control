@@ -1,9 +1,9 @@
-Package: com.hamad.shield
-Name: HamadShield
+Package: com.hamad.test
+Name: ProjectAlpha
 Depends: mobilesubstrate
 Version: 1.0.0
 Architecture: iphoneos-arm
-Description: My Shield
+Description: Just a test project
 Maintainer: Hamad
-Author: Architect
+Author: Hamad
 Section: Tweaks
