@@ -4,26 +4,27 @@ on: [push, workflow_dispatch]
 jobs:
   build:
     runs-on: macos-latest
-    # السطر ده بيسكت أي تحذير من جيت هاب بخصوص Node
     env:
+      THEOS: ${{ github.workspace }}/theos
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install Theos and SDK
+      - name: Setup Theos & SDK
         run: |
-          git clone --recursive https://github.com/theos/theos.git $HOME/theos
-          curl -L https://github.com/theos/sdks/raw/master/iPhoneOS14.5.sdk.tar.xz -o iPhoneOS14.5.sdk.tar.xz
-          mkdir -p $HOME/theos/sdks
-          tar -xf iPhoneOS14.5.sdk.tar.xz -C $HOME/theos/sdks
-          echo "THEOS=$HOME/theos" >> $GITHUB_ENV
+          git clone --recursive https://github.com/theos/theos.git $THEOS
+          curl -L https://github.com/theos/sdks/raw/master/iPhoneOS14.5.sdk.tar.xz -o SDK.tar.xz
+          mkdir -p $THEOS/sdks
+          tar -xf SDK.tar.xz -C $THEOS/sdks
+          # تحميل ملفات الحماية (Substrate) عشان "Exit code 1" تختفي
+          curl -L https://github.com/theos/headers/archive/master.zip -o headers.zip
+          unzip -o headers.zip -d $THEOS/include
 
       - name: Build Tweak
         run: |
-          export THEOS=$HOME/theos
-          # السطر ده بيمسح أي مخلفات قديمة ويبني من جديد
+          cd ${{ github.workspace }}
           make clean
           make package FINALPACKAGE=1
         
