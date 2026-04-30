@@ -5,31 +5,28 @@ jobs:
   build:
     runs-on: macos-latest
     env:
-      THEOS: ${{ github.workspace }}/theos
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Theos & SDK
+      - name: Setup Theos
         run: |
-          git clone --recursive https://github.com/theos/theos.git $THEOS
+          git clone --recursive https://github.com/theos/theos.git $HOME/theos
           curl -L https://github.com/theos/sdks/raw/master/iPhoneOS14.5.sdk.tar.xz -o SDK.tar.xz
-          mkdir -p $THEOS/sdks
-          tar -xf SDK.tar.xz -C $THEOS/sdks
-          # تحميل ملفات الحماية (Substrate) عشان "Exit code 1" تختفي
-          curl -L https://github.com/theos/headers/archive/master.zip -o headers.zip
-          unzip -o headers.zip -d $THEOS/include
+          mkdir -p $HOME/theos/sdks
+          tar -xf SDK.tar.xz -C $HOME/theos/sdks
+          echo "THEOS=$HOME/theos" >> $GITHUB_ENV
 
       - name: Build Tweak
         run: |
-          cd ${{ github.workspace }}
+          export THEOS=$HOME/theos
           make clean
           make package FINALPACKAGE=1
         
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Hamad-Shield-File
+          name: Hamad-Final-Shield
           path: packages/*.deb
