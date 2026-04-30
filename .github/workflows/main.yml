@@ -1,16 +1,22 @@
 name: CI
 on: [push, workflow_dispatch]
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Set up Theos
-        uses: p0009/setup-theos@main
-      - name: Build
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Theos
+        uses: theos/setup-theos@master # ده الشيف الأصلي المضمون
+
+      - name: Build Package
         run: |
           make package FINALPACKAGE=1
-      - uses: actions/upload-artifact@v4
+        
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
         with:
-          name: Output-File
+          name: Hamad-Shield-File
           path: packages/*.deb
