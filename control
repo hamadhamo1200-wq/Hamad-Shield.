@@ -1,0 +1,9 @@
+Package: com.hamad.shield
+Name: HamadShield
+Depends: mobilesubstrate
+Version: 1.0.0
+Architecture: iphoneos-arm
+Description: My Shield
+Maintainer: Hamad
+Author: Architect
+Section: Tweaks
