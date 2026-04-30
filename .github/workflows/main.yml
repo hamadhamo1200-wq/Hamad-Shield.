@@ -8,11 +8,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Theos
-        uses: theos/setup-theos@master # ده الشيف الأصلي المضمون
+      - name: Install Theos Manually
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang libssl-dev ldid
+          git clone --recursive https://github.com/theos/theos.git $HOME/theos
+          # تحميل الـ SDK عشان الكود يعرف يتبرمج للآيفون
+          curl -LO https://github.com/theos/sdks/raw/master/iPhoneOS14.5.sdk.tar.xz
+          mkdir -p $HOME/theos/sdks
+          tar -xf iPhoneOS14.5.sdk.tar.xz -C $HOME/theos/sdks
 
       - name: Build Package
         run: |
+          export THEOS=$HOME/theos
           make package FINALPACKAGE=1
         
       - name: Upload Artifact
